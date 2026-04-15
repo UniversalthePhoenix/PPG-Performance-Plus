@@ -1,0 +1,13 @@
+.vs/
+.vscode/
+.qodo/
+bin/
+obj/
+
+# Local game/runtime output
+config.json
+session-report.txt
+
+# OS noise
+Thumbs.db
+Desktop.ini

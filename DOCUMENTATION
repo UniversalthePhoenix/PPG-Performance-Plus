@@ -1,0 +1,36 @@
+# PPG Performance+ Documentation
+
+Copyright (c) 2026 Marshmallo / Plushyco GNU General Public License
+
+DEVNOTE: I go by two different unique names, Marshmallo & Plushyco. Both the same person.
+
+This is the documentation for the PPG Performance+ mod.
+Game: People Playground (Steam)
+
+User control is prioritized for their experience and comfort.
+This mod is designed to not conflict with other mods or cause any issues. It is intended to be used with other mods.
+
+There is a settings menu for the user to adjust the mod to their liking. F10 opens the settings menu, and vice-versa.
+
+This mod is non-invasive and built specifically for the game People Playground and it's community.
+
+Repository implementation notes
+
+- The repo now includes a People Playground-compatible root `mod.json`.
+- Runtime scripts live under `Scripts/` and are intended to be loaded directly by the game.
+- A C# scaffold also exists under `src/PPGPerformancePlus`.
+- The current codebase provides:
+  - config persistence
+  - People Playground script entry point lifecycle
+  - persistent runtime controller
+  - frame-time tracking
+  - lag warning and recovery systems
+  - auto-sleep
+  - debris control
+  - adaptive physics iteration scaling
+  - session reports
+- The current codebase still does not include direct contraption spawn interception from internal game hooks.
+
+Internal hook note
+- A likely next step is using Harmony to patch verified spawn methods inside `Assembly-CSharp.dll`, especially the methods responsible for loading or instantiating contraptions and `.sub` files.
+- Those method names should be captured only after inspecting the exact People Playground build you intend to support.

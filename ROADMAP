@@ -1,0 +1,309 @@
+Full Roadmap (start → release → scale)
+
+PHASE 1 — Core Foundation
+1. Config System
+Persistent config file (JSON)
+Fields:
+- FirstRun
+- ShowNotifications
+- EnableLagWarnings
+- EnableAutoSleep
+- EnableDebrisControl
+- EnableOffscreenOptimization
+- EnableAdaptivePhysics
+- EnableFreezeProtection
+- EnableSafeSpawnStabilisation
+- RemoveTinyDebris
+- ScanIntervalFrames
+- NotificationCooldownSeconds
+- ConsecutiveLagFramesForWarning
+- HeavySpawnBodyThreshold
+- DangerousSpawnBodyThreshold
+- MaxDebrisBodies
+- FrameSpikeThresholdMs
+- SustainedFrameThresholdMs
+- SevereFrameThresholdMs
+- IdleVelocityThreshold
+- AutoSleepDelaySeconds
+- SmallBodySizeThreshold
+- OffscreenSleepDelaySeconds
+- EmergencyModeSeconds
+- physics iteration profiles
+- SettingsKey
+
+2. Module Architecture
+Split early to avoid rewrite later:
+Core
+ConfigManager
+SpawnManager
+PhysicsController
+LagDetector
+RecoverySystem
+UIManager
+ModProfiler
+
+3. Silent Boot System
+Load config
+Initialize systems
+No UI unless:
+firstRun = true
+critical issue detected
+
+PHASE 2 — Spawn Optimization (highest ROI)
+4. Spawn Interceptor
+Hook into:
+contraption spawn
+modded entity spawn
+Track:
+entity count
+joints
+rigidbodies
+
+5. Progressive Spawning
+Break large spawns into batches
+Queue system:
+process X entities per frame
+Adaptive batch size:
+lower FPS → smaller batches
+
+6. Pre-Spawn Analyzer
+Before spawning:
+Estimate cost:
+part count
+joints
+Classify:
+Safe
+Heavy
+Dangerous
+
+7. Safe Spawn Mode
+If heavy:
+pause simulation
+spawn in chunks
+resume
+
+PHASE 3 — Runtime Optimization
+8. Auto-Sleep System
+Detect inactive objects
+Force sleep after X seconds
+Wake on:
+collision
+force
+interaction
+
+9. Offscreen Optimization
+Detect camera visibility
+Reduce update rate for:
+offscreen rigidbodies
+distant objects
+
+10. Constraint Load Manager
+Monitor constraint count
+If overload:
+reduce update frequency
+stagger updates
+
+11. Debris Manager
+Detect:
+tiny loose parts
+Actions:
+merge
+remove
+limit total debris count
+
+12. Adaptive Physics Scaling
+Monitor FPS / frame time
+Adjust:
+solver iterations
+update frequency
+
+PHASE 4 — Lag Detection System
+13. Frame Time Monitor
+Track:
+ms per frame
+spikes
+sustained drops
+
+14. Event Correlation System
+Associate lag with:
+last spawned mod
+recent entities
+sudden entity spikes
+
+15. Mod Attribution System
+Maintain:
+“mod → performance impact” mapping
+Track:
+spike frequency
+average cost
+
+16. Warning System
+Trigger when:
+threshold exceeded
+UI:
+Mod name
+Impact level
+Options:
+Disable temporarily
+Ignore
+Don’t show again
+
+17. False Positive Control
+Cooldowns per mod
+Require repeated spikes before warning
+Ignore short spikes
+
+PHASE 5 — Freeze Protection
+18. Watchdog System
+Detect:
+no frame progression
+physics stall
+
+19. Emergency Recovery
+Actions:
+pause physics
+disable newest entities
+unload last spawn batch
+
+20. Soft Rollback
+Keep spawn history
+Undo last heavy spawn
+
+PHASE 6 — Mod Profiling (advanced trust feature)
+21. Performance Logging
+Track per mod:
+average spawn cost
+spike count
+worst frame time
+
+22. Session Report
+Show:
+“Top lag contributors”
+
+23. Predictive Warning
+Before spawn:
+“This may reduce FPS by ~X%”
+
+PHASE 7 — UI System (non-intrusive)
+24. One-Time Setup Screen
+Appears once
+Saves preferences
+
+25. Settings Panel
+Access via:
+keybind (primary)
+optional small button
+Sections:
+Performance
+Protection
+Notifications
+Advanced
+
+26. Notification System
+Types:
+subtle toast (minor)
+popup (major)
+Rules:
+no spam
+cooldowns
+respect ignoredMods
+
+PHASE 8 — Compatibility + Safety
+27. Mod Conflict Detection
+Detect:
+known optimization mods
+Action:
+warn user
+disable overlapping features
+
+28. Safe Mode
+If instability detected:
+disable advanced systems
+keep only core protections
+
+PHASE 9 — Testing
+29. Stress Testing
+Test with:
+massive contraptions
+mod-heavy setups
+low-end hardware scenarios
+
+30. Edge Cases
+Handle:
+rapid spawning
+mod reloads
+corrupted entities
+
+31. False Positive Testing
+simulate lag spikes
+ensure system doesn’t overreact
+
+PHASE 10 — Release Strategy
+32. Transparency Page
+Include:
+what the mod does
+what it does NOT do
+performance impact
+
+33. Demo Evidence
+before/after FPS
+freeze prevention clips
+
+34. Clear Messaging
+Avoid:
+“boost”
+“fix everything”
+Use:
+“stability”
+“protection”
+“smoother spawning”
+
+PHASE 11 — Post-Release Evolution
+35. Feedback Loop
+collect user reports
+track false positives
+
+36. Update Strategy
+small frequent updates
+avoid breaking configs
+
+37. Feature Flags
+allow disabling unfinished systems
+
+High-End Features (Later)
+38. Machine Learning-like Heuristics
+learn which mods cause lag over time
+39. Dynamic LOD System
+simplify objects based on distance
+40. Multiplayer Awareness (if applicable)
+sync-safe optimizations
+
+Final Priority Order
+Config system
+Spawn batching
+Frame time monitor
+Basic lag warning
+Auto-sleep
+Freeze recovery
+UI panel
+Everything else builds on top of that.
+
+Current implementation status
+- People Playground script mod scaffolded at repo root with `mod.json`
+- Secondary library scaffold kept in `src/PPGPerformancePlus`
+- Implemented:
+  - config system
+  - People Playground-compatible boot entry point
+  - frame time monitor
+  - scene spike detection for heavy spawns
+  - basic lag warning
+  - freeze recovery / emergency conservative mode
+  - first-run settings UI
+  - auto-sleep
+  - debris control
+  - adaptive physics scaling
+- Still required for a working game mod:
+  - direct contraption spawn interception if you want true pre-spawn batching
+  - richer in-game UI if you want something beyond the current `OnGUI` panel
+  - compatibility detection
+  - runtime stress testing

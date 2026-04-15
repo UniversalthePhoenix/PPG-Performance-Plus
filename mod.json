@@ -1,0 +1,23 @@
+{
+  "Name": "PPG Performance+",
+  "Author": "Marshmallo / Plushyco",
+  "Description": "Performance and stability toolkit for large People Playground scenes.\n\nIncludes adaptive spawning, frame monitoring, auto-sleep, and lightweight physics scaling. Designed to reduce lag and prevent freezes without changing normal gameplay.",
+  "ModVersion": "0.1.0",
+  "GameVersion": "latest",
+  "ThumbnailPath": "ppgperfplus.png",
+  "EntryPoint": "PPGPerformancePlusMod.Mod",
+  "Tags": [
+    "Utility",
+    "Performance",
+    "Quality of Life"
+  ],
+  "Scripts": [
+    "Scripts/Mod.cs",
+    "Scripts/Config/ConfigStore.cs",
+    "Scripts/Config/ModConfig.cs",
+    "Scripts/Runtime/RuntimeController.cs",
+    "Scripts/Services/FrameTracker.cs",
+    "Scripts/Services/NotificationCenter.cs",
+    "Scripts/Services/SceneSnapshot.cs"
+  ]
+}
